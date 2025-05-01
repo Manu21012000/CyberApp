@@ -34,14 +34,18 @@ def test_email(request):
 
 @login_required
 def check_verification(request):
-    if not request.user.is_authenticated:
-        return redirect('account_login')
+    email_verified = EmailAddress.objects.filter(user=request.user, verified=True).exists()
+    phone_verified = PhoneVerification.objects.filter(user=request.user, is_verified=True).exists()
     
-    email_address = EmailAddress.objects.get_primary(request.user)
-    if not email_address or not email_address.verified:
-        messages.warning(request, 'Please verify your email address to access all features.')
-        return render(request, 'account/verification_sent.html')
+    if not email_verified:
+        messages.warning(request, 'Please verify your email address to continue.')
+        return render(request, 'main_app/verification_sent.html')
     
+    if not phone_verified:
+        messages.warning(request, 'Please verify your phone number to continue.')
+        return redirect('verify_phone')
+    
+    messages.success(request, 'Your account is fully verified!')
     return redirect('home')
 
 @login_required
@@ -88,9 +92,27 @@ def resend_phone_verification(request):
         phone_verification.created_at = timezone.now()
         phone_verification.save()
         
-        # TODO: Send new verification code via WhatsApp/SMS
+        # Send verification code
+        from main_app.utils import send_verification_code
+        success, result = send_verification_code(
+            phone_verification.phone_number,
+            new_code,
+            method='whatsapp'  # Try WhatsApp first
+        )
         
-        messages.success(request, 'New verification code sent to your phone number.')
+        if not success:
+            # Fall back to SMS
+            success, result = send_verification_code(
+                phone_verification.phone_number,
+                new_code,
+                method='sms'
+            )
+        
+        if success:
+            messages.success(request, 'New verification code sent to your phone number.')
+        else:
+            messages.error(request, f'Failed to send verification code: {result}')
+        
         return redirect('verify_phone')
         
     except PhoneVerification.DoesNotExist:

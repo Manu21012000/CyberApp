@@ -193,3 +193,13 @@ PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_PHONE_VERIFICATION = 'mandatory'  # New setting for phone verification
 ACCOUNT_UNVERIFIED_ACCOUNT_DELETION_DAYS = 7  # Delete unverified accounts after 7 days
+
+# Twilio Settings
+TWILIO_ACCOUNT_SID = 'your_account_sid_here'
+TWILIO_AUTH_TOKEN = 'your_auth_token_here'
+TWILIO_PHONE_NUMBER = 'your_twilio_phone_number_here'
+
+# WhatsApp Settings
+WHATSAPP_BUSINESS_ID = 'your_whatsapp_business_id_here'
+WHATSAPP_PHONE_NUMBER_ID = 'your_whatsapp_phone_number_id_here'
+WHATSAPP_ACCESS_TOKEN = 'your_whatsapp_access_token_here'

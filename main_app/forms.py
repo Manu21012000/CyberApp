@@ -2,6 +2,7 @@ from django import forms
 from allauth.account.forms import SignupForm
 from phonenumber_field.formfields import PhoneNumberField
 import random
+from main_app.utils import send_verification_code
 
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name')
@@ -19,13 +20,29 @@ class CustomSignupForm(SignupForm):
         
         # Create phone verification record
         from .models import PhoneVerification
-        PhoneVerification.objects.create(
+        phone_verification = PhoneVerification.objects.create(
             user=user,
             phone_number=self.cleaned_data['phone_number'],
             verification_code=verification_code
         )
 
-        # TODO: Send verification code via WhatsApp/SMS
-        # You'll need to implement this based on your preferred service provider
+        # Send verification code
+        success, result = send_verification_code(
+            phone_verification.phone_number,
+            verification_code,
+            method='whatsapp'  # Try WhatsApp first
+        )
+        
+        if not success:
+            # Fall back to SMS
+            success, result = send_verification_code(
+                phone_verification.phone_number,
+                verification_code,
+                method='sms'
+            )
+        
+        if not success:
+            # Log the error but don't prevent account creation
+            print(f"Failed to send verification code: {result}")
         
         return user 

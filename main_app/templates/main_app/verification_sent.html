@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Verification Required</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <div class="verification-steps">
+                        <h4>Email Verification</h4>
+                        <p>We've sent a verification email to your registered email address. Please check your inbox and click the verification link to verify your email.</p>
+                        <ul>
+                            <li>Check your spam folder if you don't see the email</li>
+                            <li>The verification link will expire after 24 hours</li>
+                            <li>You can request a new verification email if needed</li>
+                        </ul>
+                        
+                        <h4 class="mt-4">Phone Verification</h4>
+                        <p>After verifying your email, you'll need to verify your phone number.</p>
+                        <ul>
+                            <li>A 6-digit verification code will be sent to your phone</li>
+                            <li>The code will expire after 5 minutes</li>
+                            <li>You can request a new code if needed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'account_email_verification_sent' %}" class="btn btn-primary">
+                            Resend Verification Email
+                        </a>
+                        <a href="{% url 'account_logout' %}" class="btn btn-outline-secondary ml-2">
+                            Return to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
