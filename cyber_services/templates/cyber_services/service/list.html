@@ -1,0 +1,97 @@
+{% extends 'base/index.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row">
+        <!-- Categories Sidebar -->
+        <div class="w-full md:w-1/4 mb-8 md:mb-0">
+            <h3 class="text-xl font-semibold mb-4">Service Categories</h3>
+            <ul class="space-y-2">
+                <li>
+                    <a href="{% url 'cyber_services:service_list' %}" 
+                       class="{% if not current_category %}text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %}">
+                        All Services
+                    </a>
+                </li>
+                {% for category_code, category_name in categories %}
+                <li>
+                    <a href="{% url 'cyber_services:service_list_by_category' category=category_code %}" 
+                       class="{% if current_category == category_code %}text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %}">
+                        {{ category_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="w-full md:w-3/4">
+            <h1 class="text-2xl font-bold mb-6">
+                {% if current_category %}
+                    {{ current_category|title }} Services
+                {% else %}
+                    All Services
+                {% endif %}
+            </h1>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for service in page_obj %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold mb-2">
+                            <a href="{{ service.get_absolute_url }}" class="text-gray-800 hover:text-blue-600">
+                                {{ service.name }}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 mb-4">{{ service.description|truncatewords:20 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-blue-600">KSh {{ service.price }}</span>
+                            <span class="text-sm text-gray-500">{{ service.processing_time }}</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{% url 'cyber_services:request_service' slug=service.slug %}" 
+                               class="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700">
+                                Request Service
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-600">No services found in this category.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <div class="mt-8 flex justify-center">
+                <nav class="flex items-center space-x-2">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+                        Previous
+                    </a>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span class="px-3 py-1 rounded bg-blue-600 text-white">{{ num }}</span>
+                    {% else %}
+                    <a href="?page={{ num }}" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+                        Next
+                    </a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">Email Verification Required</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h4 class="alert-heading">Account Not Verified</h4>
+                        <p>Your account is not yet verified. Please check your email for the verification link.</p>
+                        <hr>
+                        <p class="mb-0">If you haven't received the email, you can:</p>
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <form method="post" action="{% url 'account_email' %}" class="form">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" type="submit" name="action_send">Resend Verification Email</button>
+                        </form>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Or</p>
+                            <a href="{% url 'account_login' %}" class="btn btn-outline-primary">Return to Login</a>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>Need Help?</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check-circle text-success"></i> Check your spam folder</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Make sure you entered the correct email address</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Contact support if the problem persists</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

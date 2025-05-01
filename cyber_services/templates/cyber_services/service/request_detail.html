@@ -1,0 +1,128 @@
+{% extends 'base/index.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Request Header -->
+            <div class="p-6 bg-gray-50 border-b">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">Service Request Details</h1>
+                        <p class="text-gray-600">Request ID: #{{ request.id }}</p>
+                    </div>
+                    <span class="px-4 py-2 rounded-full text-sm font-semibold
+                        {% if request.status == 'pending' %}bg-yellow-100 text-yellow-800
+                        {% elif request.status == 'processing' %}bg-blue-100 text-blue-800
+                        {% elif request.status == 'completed' %}bg-green-100 text-green-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ request.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Service Information -->
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-semibold mb-4">Service Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Service Name</p>
+                        <p class="font-medium">{{ request.service.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Price</p>
+                        <p class="font-medium">KSh {{ request.service.price }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Processing Time</p>
+                        <p class="font-medium">{{ request.service.processing_time }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Request Date</p>
+                        <p class="font-medium">{{ request.created_at|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field Values -->
+            {% if field_values %}
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-semibold mb-4">Provided Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for field_value in field_values %}
+                    <div>
+                        <p class="text-sm text-gray-600">{{ field_value.field.name }}</p>
+                        <p class="font-medium">{{ field_value.value }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Documents -->
+            {% if documents %}
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-semibold mb-4">Uploaded Documents</h2>
+                <div class="space-y-4">
+                    {% for document in documents %}
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
+                        <div>
+                            <p class="font-medium">{{ document.get_document_type_display }}</p>
+                            <p class="text-sm text-gray-600">Uploaded on {{ document.uploaded_at|date:"F j, Y" }}</p>
+                        </div>
+                        <a href="{{ document.file.url }}" target="_blank" 
+                           class="text-blue-600 hover:text-blue-800">
+                            View Document
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Additional Information -->
+            {% if request.additional_info %}
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-semibold mb-4">Additional Information</h2>
+                <p class="text-gray-700">{{ request.additional_info }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Status Updates -->
+            <div class="p-6">
+                <h2 class="text-xl font-semibold mb-4">Status Updates</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-medium">Request Submitted</p>
+                            <p class="text-sm text-gray-600">{{ request.created_at|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+                    {% if request.updated_at != request.created_at %}
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-medium">Last Updated</p>
+                            <p class="text-sm text-gray-600">{{ request.updated_at|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

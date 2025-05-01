@@ -1,0 +1,85 @@
+{% extends 'base/index.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Product Image -->
+            <div class="w-full md:w-1/2">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                     class="w-full h-auto rounded-lg shadow-lg">
+            </div>
+
+            <!-- Product Info -->
+            <div class="w-full md:w-1/2">
+                <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+                <p class="text-2xl font-bold text-blue-600 mb-4">${{ product.price }}</p>
+                
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-2">Description</h2>
+                    <p class="text-gray-600">{{ product.description }}</p>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-2">Category</h2>
+                    <a href="{{ product.category.get_absolute_url }}" 
+                       class="text-blue-600 hover:underline">
+                        {{ product.category.name }}
+                    </a>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-2">Availability</h2>
+                    {% if product.stock > 0 %}
+                    <p class="text-green-600">In Stock ({{ product.stock }} available)</p>
+                    {% else %}
+                    <p class="text-red-600">Out of Stock</p>
+                    {% endif %}
+                </div>
+
+                {% if product.stock > 0 %}
+                <form action="{% url 'ecommerce:cart_add' product.id %}" method="post" class="mb-6">
+                    {% csrf_token %}
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center border rounded">
+                            <button type="button" class="px-3 py-2" onclick="decrementQuantity()">-</button>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   class="w-16 text-center border-x" id="quantity">
+                            <button type="button" class="px-3 py-2" onclick="incrementQuantity()">+</button>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                            Add to Cart
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+
+                <div class="border-t pt-6">
+                    <h2 class="text-xl font-semibold mb-2">Product Details</h2>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><strong>Added:</strong> {{ product.created_at|date:"F d, Y" }}</li>
+                        <li><strong>Last Updated:</strong> {{ product.updated_at|date:"F d, Y" }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function incrementQuantity() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.getAttribute('max'));
+    if (parseInt(input.value) < max) {
+        input.value = parseInt(input.value) + 1;
+    }
+}
+
+function decrementQuantity() {
+    const input = document.getElementById('quantity');
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+</script>
+{% endblock %} 

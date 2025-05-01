@@ -1,0 +1,83 @@
+{% extends 'base/index.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Service Request Header -->
+            <div class="p-6 bg-gray-50 border-b">
+                <h1 class="text-3xl font-bold mb-2">Request Service: {{ service.name }}</h1>
+                <div class="flex items-center justify-between">
+                    <span class="text-2xl font-bold text-blue-600">KSh {{ service.price }}</span>
+                    <span class="text-sm text-gray-500">{{ service.processing_time }}</span>
+                </div>
+            </div>
+
+            <!-- Service Request Form -->
+            <div class="p-6">
+                <form method="post" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Custom Fields -->
+                    {% with service_field_form=service_field_form %}
+                    {% for field in service_field_form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endwith %}
+
+                    <!-- Document Upload -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Required Documents</h3>
+                        <div class="space-y-4">
+                            {% for document_type in document_types %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">
+                                    {{ document_type.1 }}
+                                </label>
+                                <input type="file" name="documents" 
+                                       class="mt-1 block w-full px-3 py-2 border rounded-md"
+                                       accept=".pdf,.jpg,.jpeg,.png">
+                                <input type="hidden" name="document_type" value="{{ document_type.0 }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div>
+                        <label for="{{ form.additional_info.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Additional Information
+                        </label>
+                        {{ form.additional_info }}
+                        {% if form.additional_info.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.additional_info.help_text }}</p>
+                        {% endif %}
+                        {% if form.additional_info.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.additional_info.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+                            Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

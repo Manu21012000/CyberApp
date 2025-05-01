@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Cyber Services & E-commerce{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h2 class="card-title">Cyber Services</h2>
+                    <p class="card-text">Access our professional cyber services including document processing, visa applications, and more.</p>
+                    <a href="{% url 'cyber_services:service_list' %}" class="btn btn-primary">View Services</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h2 class="card-title">Branding Services</h2>
+                    <p class="card-text">Get professional branding services including logo design, business cards, and marketing materials.</p>
+                    <a href="{% url 'branding_services:product_list' %}" class="btn btn-primary">View Services</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h2 class="card-title">E-commerce</h2>
+                    <p class="card-text">Shop our collection of products and services with secure payment options.</p>
+                    <a href="{% url 'ecommerce:product_list' %}" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,78 @@
+{% extends 'base/index.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Your Shopping Cart</h1>
+
+        {% if cart %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="divide-y">
+                {% for item in cart %}
+                <div class="p-6 flex flex-col md:flex-row items-center gap-6">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                         class="w-24 h-24 object-cover rounded">
+                    
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold">
+                            <a href="{{ item.product.get_absolute_url }}" class="text-gray-800 hover:text-blue-600">
+                                {{ item.product.name }}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">${{ item.price }} each</p>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center border rounded">
+                            <button type="button" class="px-3 py-2" onclick="updateQuantity({{ item.product.id }}, -1)">-</button>
+                            <span class="px-4 py-2">{{ item.quantity }}</span>
+                            <button type="button" class="px-3 py-2" onclick="updateQuantity({{ item.product.id }}, 1)">+</button>
+                        </div>
+                        <span class="text-lg font-semibold">${{ item.total_price }}</span>
+                        <a href="{% url 'ecommerce:cart_remove' item.product.id %}" 
+                           class="text-red-600 hover:text-red-800">
+                            Remove
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="p-6 bg-gray-50">
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-semibold">Total:</span>
+                    <span class="text-2xl font-bold text-blue-600">${{ cart.get_total_price }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-between">
+            <a href="{% url 'ecommerce:product_list' %}" 
+               class="bg-gray-200 text-gray-800 px-6 py-3 rounded hover:bg-gray-300">
+                Continue Shopping
+            </a>
+            <a href="{% url 'ecommerce:order_create' %}" 
+               class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+                Proceed to Checkout
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-600 text-lg mb-4">Your cart is empty.</p>
+            <a href="{% url 'ecommerce:product_list' %}" 
+               class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+                Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function updateQuantity(productId, change) {
+    // This is a placeholder for the actual implementation
+    // You would need to implement this with AJAX to update the cart
+    console.log(`Update quantity for product ${productId} by ${change}`);
+}
+</script>
+{% endblock %} 
