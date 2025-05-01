@@ -126,7 +126,7 @@ This project is licensed under the [MIT License](LICENSE).
 For questions or suggestions, feel free to reach out:
 
 - GitHub: [Manu21012000](https://github.com/Manu21012000)
-- Email: [your-email@example.com] *(Replace with your actual email)*
+- Email: [emanuyegon4@gmail.com]
 
 ---
 
