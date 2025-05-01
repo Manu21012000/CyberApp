@@ -128,6 +128,3 @@ For questions or suggestions, feel free to reach out:
 - GitHub: [Manu21012000](https://github.com/Manu21012000)
 - Email: [emanuyegon4@gmail.com]
 
----
-
-Let me know if there’s anything else you’d like to add to the README!
